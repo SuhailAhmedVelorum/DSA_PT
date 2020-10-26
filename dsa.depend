@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1603203139 source:c:\users\subra\documents\c++\proj\dsa\main.cpp
+	<iostream>
+	<string.h>
+	<fstream>
+	<stdio.h>
+	<cstdio>
+	<random>
+	<stdlib.h>
+	<cstdlib>
+	<ctime>
+
