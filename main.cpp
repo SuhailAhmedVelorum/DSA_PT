@@ -191,7 +191,6 @@ int edit_dist(char* s1, char* s2){
     int i,j,l1,l2,t,track;
     int dist[50][50];
     
-
     l1 = strlen(s1);
     l2 = strlen(s2);
 
