@@ -1,0 +1,46 @@
+
+#include "koolplot.h"
+#include<iostream>
+int main()
+{
+   cout<<"hello";
+   int n=5;
+  double a[]={1,2,3,4,5};
+   double b[]={2.5,3.4,1.2,5.7,2.2};
+    double c[]={4.6,7.9,2.3,8.0,1.3};
+   Plotdata x,y,z,w;
+   insert(x,a,5);
+   insert(y,b,5);
+   insert(z,c,5);
+   insert(w,a,5);
+   //plot(x,y);
+   for(int i=0;i<n;i++){
+    addMark(x, y,a[i],b[i],DARKVIOLET);
+  }
+   setColor(x,y,RED);
+
+  // Plotdata x(-3.0, 3.0), y = sin(x) - 0.5*x;
+  /* for(int i=0;i<n;i++){
+    addMark(x, y,a[i],b[i],BLACK);
+  }*/
+ // insert(y,c,5);
+ //clear(y);
+
+ //insert(y,c,5);
+  x<<w;
+  y<<z;
+  for(int i=0;i<n;i++){
+    addMark(x, y,a[i],c[i],DARKVIOLET);
+  }
+  plot(x,y,BLUE,"MP AND BP");
+
+  /*plotdata x(-315.0, 45.0), y = sin(x * 3.1417 / 180), z = cos(x * 3.1417 / 180);
+//breakplot(x, y); // Ensures that the first graph is not linked to the second
+x << x; // duplicate the data within x
+y << z; // append z data to y
+plot(x, y); // plot both sin x and cos x over the same range*/
+
+
+
+   return 0;
+}
