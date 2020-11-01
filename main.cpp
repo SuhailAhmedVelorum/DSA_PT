@@ -1,3 +1,4 @@
+#include "matplotlibcpp.h"
 #include<iostream>
 #include<string.h>
 #include<fstream>
@@ -10,6 +11,7 @@
 #include<cstdlib>
 #include<ctime>
 using namespace std;
+namespace plt = matplotlibcpp;
 
 #define MIN(x,y) ((x) < (y) ? (x) : (y));
 
@@ -217,6 +219,26 @@ int edit_dist(char* s1, char* s2){
    return dist[l2][l1];
 }
 
+//plots melting points
+void plot_mp(){
+    ifstream fout("elements.txt", ios::in|ios::binary);
+    ifstream fin("elements.txt", ios::in|ios::binary);
+    elements obj;
+    int n = 118;
+    int i = 1;
+    std::vector<double> x(n), y(n);
+    while(fout.read((char*)&obj,sizeof(obj))){
+        x.at(i) = i;
+        y.at(i) = obj.retMp();
+        i++;
+    }
+    plt::figure_size(1200, 780);
+    plt::named_plot("Melting point", x, y);
+    plt::title("Melting points");
+    plt::legend();
+    plt::show();
+}
+
 //Delete Function
 void deleteElement(){
     
@@ -322,7 +344,8 @@ int main(){
     questions pbj;
     loop:
         system("cls");
-        cout<<"1. Enter an Element\n2. Delete an Element\n3. Search for an Element\n4. Take a Quiz\nYour Choice: ";
+        // system("clear"); //for linux
+        cout<<"1. Enter an Element\n2. Delete an Element\n3. Search for an Element\n4. Take a Quiz\n5. Plot the melting points of the elements\nYour Choice: ";
         int choice;
         cin>>choice;
         switch(choice){
@@ -337,6 +360,7 @@ int main(){
                 break;
             }
             case 4: pbj.getQuestion();break;
+            case 5: plot_mp();break;
         }
         cout<<endl;
         system("pause");
