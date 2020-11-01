@@ -68,6 +68,9 @@ class elements{
     int retPeriod(){
     return period;}
 
+    int retGroup(){
+    return group;
+    }
     void display(){
 
         cout<<"\nName: "<<name<<endl;
@@ -360,6 +363,51 @@ fin.close();
 
 
 }
+void gpoints(int g){
+    elements obj;
+    double mp[20], bp[20],a[20];
+    int k = 0,n;
+
+    ifstream fin("elements.txt", ios::in | ios::binary);
+    while(fin.read((char*)&obj, sizeof(obj))){
+      if(g == obj.retGroup()){
+          cout<<obj.retName()<<"\n";
+          a[k] = obj.retNo();
+          cout<<"Atomic Number:"<< a[k]<<"\n";
+          mp[k] = obj.retmp()/10;
+          cout<<"Melting Point"<<mp[k]*10<<"\n";
+          bp[k] = obj.retbp()/10;
+          cout<<"Boiling Point"<<bp[k]*10<<"\n\n";
+
+          k++;
+      }
+      else{
+      }
+    }
+    n=k;
+fin.close();
+
+            plotdata x,y,w,z;
+            insert(x,a,n);
+            insert(y, mp, n);//kill me
+            for(int i=0;i<n;i++){
+                addMark(x, y,a[i],mp[i]);
+            }
+
+
+            insert(w,a,n);
+            insert(z, bp, n);//kill me
+            for(int i=0;i<n;i++){
+                addMark(x, y,a[i],bp[i]);
+            }
+            setColor(x,y,RED);
+            x<<w;
+            y<<z;
+            plot(x,y,BLUE,"Plot of Melting point and Boiling Point(reduced by a factor of 10");
+
+
+}
+
 int main(){
 
     elements obj;
@@ -382,12 +430,26 @@ int main(){
         }
         case 4: pbj.getQuestion();break;
         case 5: {
-                int p;
-                cout<<"Enter Period to view: ";
-                cin>>p;
-                points(p);
+                /*int prop;
+                cout<<"Select Properties to compare:\n"<<"1. Melting Point\n2. Boiling Point\n3. Melting point and Boiling point\n";
+                cin>>prop;*/
+                int selector;
+                cout<<"Select Elements\n1. By Period\n2. By Group\n";
+                cin>>selector;
+                if(selector==1){
+                    int p;
+                    cout<<"Enter Period to view: ";
+                    cin>>p;
+                    points(p);
+                }
+                else if(selector==2){
+                    int g;
+                    cout<<"Enter Group to view: ";
+                    cin>>g;
+                    gpoints(g);
+                }
                 goto loop;
-                    }
+                }
 
     }
     cout<<endl;
