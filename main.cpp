@@ -69,8 +69,14 @@ class elements{
     return period;}
 
     int retGroup(){
-    return group;
-    }
+    return group;}
+
+    float retw(){
+    return atomicWeight;}
+
+    void gpb(){
+    cout<<"Group: "<<group<<"\nPeriod: "<<period<<"\nBlock: "<<block<<endl;}
+
     void display(){
 
         cout<<"\nName: "<<name<<endl;
@@ -186,6 +192,50 @@ class questions
 };
 //End of Questions Class
 
+void parseInput(char input[10]){
+    elements obj;
+    char symbol[4], property[10];
+    int i = 0,j=0,k=0;
+    while(input[i]!= ':'){
+        symbol[j] = input[i];
+        i++;j++;
+    }
+    symbol[j] = '\0';
+    i++;
+    while(i<strlen(input)){
+        property[k] = input[i];
+        i++;k++;
+    }
+
+    property[k] = '\0';
+    ifstream fin("elements.txt", ios::in | ios::binary);
+    while(fin.read((char*)&obj,sizeof(obj))){
+        if(strcmp(obj.retSymbol(), symbol)==0)
+            break;
+    }
+    cout<<endl;
+    if(strcmp("atno", property)==0){
+        cout<<"Element: "<<obj.retName()<<endl<<"Atomic Number: "<<obj.retNo();
+    }
+    else if(strcmp("atweight", property)==0){
+         cout<<"Element: "<<obj.retName()<<endl<<"Atomic Weight: "<<obj.retw();
+    }
+    else if(strcmp("mp", property)==0){
+         cout<<"Element: "<<obj.retName()<<endl<<"Melting Point: "<<obj.retmp();
+    }
+    else if(strcmp("bp", property)==0){
+         cout<<"Element: "<<obj.retName()<<endl<<"Boiling Point: "<<obj.retbp();
+    }
+    else if(strcmp("yod", property)==0){
+         cout<<"Element: "<<obj.retName()<<endl<<"Year of Discovery: "<<obj.retYear();
+    }
+    else if(strcmp("gpb", property)==0){
+         cout<<"Element: "<<obj.retName()<<endl;
+         obj.gpb();
+    }
+
+}
+
 //Computes the Lavenshtiens distance between the two input words
 int edit_dist(char* s1, char* s2){
 
@@ -221,7 +271,7 @@ int edit_dist(char* s1, char* s2){
 
 //Delete Function
 void deleteElement(){
-    cout<<"\nEnter the symbol of the Element you wan to delete: ";
+    cout<<"\nEnter the symbol of the Element you want to delete: ";
     char sym[4];
     cin>>sym;
     elements obj;
@@ -241,13 +291,20 @@ void deleteElement(){
 
 
 //Search Functions
-void searchChoice(int ans){
+void searchChoice(){
+    loop:
+    system("cls");
+    cout<<"1. Search by Element Symbol\n2. Search by Element Name\n3. Search by Date Range\n4. Search by Year Discovered\n5. Search by Block\n0. Return to Menu\nYour Choice: ";
+    int ans;
+    cin>>ans;
     ifstream fout("elements.txt", ios::in|ios::binary);
     ifstream fin("elements.txt", ios::in|ios::binary);
     elements obj;
     elements viable;
     int mind = 100000;
     switch(ans){
+        case 0:
+                return;
         case 1:
                 cout<<"Enter the Symbol: ";
                 char sym[4]; cin>>sym;
@@ -257,7 +314,8 @@ void searchChoice(int ans){
                         break;
                     }
                 }
-                fout.close();break;
+                fout.close();
+                break;
 
 
         case 2:
@@ -271,6 +329,7 @@ void searchChoice(int ans){
                 }
                 viable.display();
                 fout.close();
+                break;
                /* cout<<"Enter the Name of the Element: ";
                 char ele[40];
                 cin>>ele;
@@ -294,6 +353,8 @@ void searchChoice(int ans){
                 }
                 fin.close();break;
 
+
+
         case 4:
                 int d3; cout<<"Enter the Year: ";cin>>d3;
                 while(fin.read((char*)&obj,sizeof(obj))){
@@ -315,11 +376,14 @@ void searchChoice(int ans){
                 fin.close();break;
 
     }
+    system("pause");
+    goto loop;
 }
+
 
 //graph function
 
-void points(int p){
+void pPoints(int p){
     elements obj;
     double mp[20], bp[20],a[20];
     int k = 0,n;
@@ -329,11 +393,11 @@ void points(int p){
       if(p==obj.retPeriod()){
           cout<<obj.retName()<<"\n";
           a[k] = obj.retNo();
-          cout<<"Atomic Number:"<< a[k]<<"\n";
+          cout<<"Atomic Number: "<< a[k]<<"\n";
           mp[k] = obj.retmp()/10;
-          cout<<"Melting Point"<<mp[k]*10<<"\n";
+          cout<<"Melting Point: "<<mp[k]*10<<"\n";
           bp[k] = obj.retbp()/10;
-          cout<<"Boiling Point"<<bp[k]*10<<"\n\n";
+          cout<<"Boiling Point: "<<bp[k]*10<<"\n\n";
 
           k++;
       }
@@ -363,7 +427,7 @@ fin.close();
 
 
 }
-void gpoints(int g){
+void gPoints(int g){
     elements obj;
     double mp[20], bp[20],a[20];
     int k = 0,n;
@@ -373,11 +437,11 @@ void gpoints(int g){
       if(g == obj.retGroup()){
           cout<<obj.retName()<<"\n";
           a[k] = obj.retNo();
-          cout<<"Atomic Number:"<< a[k]<<"\n";
+          cout<<"Atomic Number: "<< a[k]<<"\n";
           mp[k] = obj.retmp()/10;
-          cout<<"Melting Point"<<mp[k]*10<<"\n";
+          cout<<"Melting Point: "<<mp[k]*10<<"\n";
           bp[k] = obj.retbp()/10;
-          cout<<"Boiling Point"<<bp[k]*10<<"\n\n";
+          cout<<"Boiling Point: "<<bp[k]*10<<"\n\n";
 
           k++;
       }
@@ -408,13 +472,31 @@ fin.close();
 
 }
 
+//View the table
+void pTable(){
+    cout<<"\n\t\t\t\t\t\tTHE MODERN PERIODIC TABLE\n";
+    cout<<"\t\t\t\t\t\t-------------------------\n";
+    cout<<"\t\t\t\t1 H                                                      He"<<"\n\n";
+    cout<<"\t\t\t\t2 Li Be                                 B  C   N  O   F  Ne"<<"\n\n";
+    cout<<"\t\t\t\t3 Na Mg                                 Al Si  P  S   Cl Ar"<<"\n\n";
+    cout<<"\t\t\t\t4 K  Ca Sc Ti V  Cr Mn Fe Co Ni Cu  Zn  Ga Ge  As Se  Br Kr"<<"\n\n";
+    cout<<"\t\t\t\t5 Rb Sr Y  Zr Nb Mo Tc Ru Rh Pd Ag  Cd  In Sn  Sb Te  I  Xe"<<"\n\n";
+    cout<<"\t\t\t\t6 Cs Ba La Hf Ta W  Re Os Ir Pt Au  Hg  Tl Pb  Bi Po  At Rn"<<"\n\n";
+    cout<<"\t\t\t\t7 Fr Ra Ac Rf Db Sg Bh Hs Mt Ds Rg  Cn  Nh Fl  Mc Lv  Ts Og"<<"\n\n";
+    cout<<"\t\t\t\t  1  2  3  4  5  6  7  8  9  10 11  12  13 14  15 16  17 18\n\n\n";
+    cout<<"\t\t\t\tLanthanoids\t Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu"<<"\n\n";
+    cout<<"\t\t\t\tActinoids\t Th Pa U  Np Pu Am Cm Bk Cf Es Fm Md No Lr"<<"\n\n";
+}
+
+
 int main(){
 
     elements obj;
     questions pbj;
     loop:
     system("cls");
-    cout<<"1. Enter an Element\n2. Delete an Element\n3. Search for an element\n4. Take a Quiz\n5. Plot Temperatures\nYour Choice: ";
+    pTable();
+    cout<<"1. Enter an Element\n2. Delete an Element\n3. Search for an element\n4. Take a Quiz\n5. Plot Temperatures\n6. Direct Search\nYour Choice: ";
     int choice;
     cin>>choice;
     switch(choice){
@@ -422,10 +504,7 @@ int main(){
         case 1: obj.enter(); obj.store(obj);break;
         case 2: deleteElement();break;
         case 3: {
-            cout<<"1. Search by Element Symbol\n2. Search by Element Name\n3. Search by Date Range\n4. Search by Year Discovered\n5. Search by Block\nYour Choice: ";
-            int ans;
-            cin>>ans;
-            searchChoice(ans);
+            searchChoice();
             break;
         }
         case 4: pbj.getQuestion();break;
@@ -440,16 +519,23 @@ int main(){
                     int p;
                     cout<<"Enter Period to view: ";
                     cin>>p;
-                    points(p);
+                    pPoints(p);
                 }
                 else if(selector==2){
                     int g;
                     cout<<"Enter Group to view: ";
                     cin>>g;
-                    gpoints(g);
+                    gPoints(g);
                 }
                 goto loop;
                 }
+        case 6:{
+                cout<<"Enter the search request in the following format:\n(element symbol):(property)";
+                cout<<"\nThe properties include: atno, atweight, mp, bp, yod, gpb(group, period, block)\n";
+                char input[10];
+                cin>>input;
+                parseInput(input);break;
+        }
 
     }
     cout<<endl;
