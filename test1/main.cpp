@@ -68,6 +68,12 @@ class elements{
     int retPeriod(){
     return period;}
 
+    int retGroup(){
+    return group;}
+
+    float retMass(){
+    return atomicWeight;}
+
     void display(){
 
         cout<<"\nName: "<<name<<endl;
@@ -316,7 +322,7 @@ void searchChoice(int ans){
 
 //graph function
 
-void points(int p){
+void pPoints(int p){
     elements obj;
     double mp[20], bp[20],a[20];
     int k = 0,n;
@@ -326,11 +332,11 @@ void points(int p){
       if(p==obj.retPeriod()){
           cout<<obj.retName()<<"\n";
           a[k] = obj.retNo();
-          cout<<"Atomic Number:"<< a[k]<<"\n";
+          cout<<"Atomic Number: "<< a[k]<<"\n";
           mp[k] = obj.retmp()/10;
-          cout<<"Melting Point"<<mp[k]*10<<"\n";
+          cout<<"Melting Point: "<<mp[k]*10<<"\n";
           bp[k] = obj.retbp()/10;
-          cout<<"Boiling Point"<<bp[k]*10<<"\n\n";
+          cout<<"Boiling Point: "<<bp[k]*10<<"\n\n";
 
           k++;
       }
@@ -360,12 +366,70 @@ fin.close();
 
 
 }
+void gPoints(int g){
+    elements obj;
+    double mp[20], bp[20],a[20];
+    int k = 0,n;
+
+    ifstream fin("elements.txt", ios::in | ios::binary);
+    while(fin.read((char*)&obj, sizeof(obj))){
+      if(g == obj.retGroup()){
+          cout<<obj.retName()<<"\n";
+          a[k] = obj.retNo();
+          cout<<"Atomic Number: "<< a[k]<<"\n";
+          mp[k] = obj.retmp()/10;
+          cout<<"Melting Point: "<<mp[k]*10<<"\n";
+          bp[k] = obj.retbp()/10;
+          cout<<"Boiling Point: "<<bp[k]*10<<"\n\n";
+
+          k++;
+      }
+      else{
+      }
+    }
+    n=k;
+fin.close();
+
+            plotdata x,y,w,z;
+            insert(x,a,n);
+            insert(y, mp, n);//kill me
+            for(int i=0;i<n;i++){
+                addMark(x, y,a[i],mp[i]);
+            }
+
+
+            insert(w,a,n);
+            insert(z, bp, n);//kill me
+            for(int i=0;i<n;i++){
+                addMark(x, y,a[i],bp[i]);
+            }
+            setColor(x,y,RED);
+            x<<w;
+            y<<z;
+            plot(x,y,BLUE,"Plot of Melting point and Boiling Point(reduced by a factor of 10");
+
+
+}
+
 int main(){
 
     elements obj;
     questions pbj;
     loop:
     system("cls");
+        cout<<"\n\t\t\tTHE MODERN PERIODIC TABLE\n";
+    cout<<"\t\t\t-------------------------\n";
+
+    cout<<"\t1 H                                                      He"<<"\n\n";
+    cout<<"\t2 Li Be                                 B  C   N  O   F  Ne"<<"\n\n";
+    cout<<"\t3 Na Mg                                 Al Si  P  S   Cl Ar"<<"\n\n";
+    cout<<"\t4 K  Ca Sc Ti V  Cr Mn Fe Co Ni Cu  Zn  Ga Ge  As Se  Br Kr"<<"\n\n";
+    cout<<"\t5 Rb Sr Y  Zr Nb Mo Tc Ru Rh Pd Ag  Cd  In Sn  Sb Te  I  Xe"<<"\n\n";
+    cout<<"\t6 Cs Ba La Hf Ta W  Re Os Ir Pt Au  Hg  Tl Pb  Bi Po  At Rn"<<"\n\n";
+    cout<<"\t7 Fr Ra Ac Rf Db Sg Bh Hs Mt Ds Rg  Cn  Nh Fl  Mc Lv  Ts Og"<<"\n\n";
+    cout<<"\t  1  2  3  4  5  6  7  8  9  10 11  12  13 14  15 16  17 18\n\n\n";
+    cout<<"\tLanthanoids\t Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu"<<"\n\n";
+    cout<<"\tActinoids\t Th Pa U  Np Pu Am Cm Bk Cf Es Fm Md No Lr"<<"\n\n\n";
     cout<<"1. Enter an Element\n2. Delete an Element\n3. Search for an element\n4. Take a Quiz\n5. Plot Temperatures\nYour Choice: ";
     int choice;
     cin>>choice;
@@ -382,12 +446,26 @@ int main(){
         }
         case 4: pbj.getQuestion();break;
         case 5: {
-                int p;
-                cout<<"Enter Period to view: ";
-                cin>>p;
-                points(p);
+                /*int prop;
+                cout<<"Select Properties to compare:\n"<<"1. Melting Point\n2. Boiling Point\n3. Melting point and Boiling point\n";
+                cin>>prop;*/
+                int selector;
+                cout<<"Select Elements\n1. By Period\n2. By Group\n";
+                cin>>selector;
+                if(selector==1){
+                    int p;
+                    cout<<"Enter Period to view: ";
+                    cin>>p;
+                    pPoints(p);
+                }
+                else if(selector==2){
+                    int g;
+                    cout<<"Enter Group to view: ";
+                    cin>>g;
+                    gPoints(g);
+                }
                 goto loop;
-                    }
+                }
 
     }
     cout<<endl;
