@@ -108,6 +108,50 @@ class elements{
     }
 };
 
+
+//store recent
+int size=0;
+struct node{
+    char sym[20];
+    node *next;
+}*q, *r;
+
+void init(){
+q = r = NULL;
+}
+
+void enq(char a[4]){
+    node *ptr = new node;
+    strcpy(ptr->sym, a);
+    ptr->next = NULL;
+    if(q == NULL){
+        q = r = ptr;
+    }
+    else{
+        r->next = ptr;
+        r = ptr;
+    }
+}
+
+void deq(){
+    node *ptr = q;
+    if(q == r){
+        q = r = NULL;
+    }
+    else{
+        q = q->next;
+        delete(ptr);
+    }
+}
+
+void display(){
+    node *ptr = q;
+    while(ptr!=NULL){
+        cout<<"Element: "<<ptr->sym<<endl;
+        ptr = ptr->next;
+    }
+}
+
 //Questions class
 class questions
 {
@@ -149,7 +193,7 @@ class questions
                 count++;
             }
         fin.close();
-        int element = rand()%10 + 1;
+        int element = rand()%80 + 1;
         ifstream fin2("elements.txt", ios::in|ios::binary);
             while(fin2.read((char*)&pbj,sizeof(pbj))){
                 if(pbj.retNo() == element)
@@ -157,6 +201,7 @@ class questions
             }
         cout<<obj.retq()<<" "<<pbj.retName()<<endl;
         fin2.close();
+
         cout<<"Your answer: ";
         int ans1,check = 0;
         char ans2[20];
@@ -164,20 +209,27 @@ class questions
         switch(obj.retAns()){
             case 1:
                 cin>>ans1;
-                if(ans1 == pbj.retNo())
+                cout<<"Correct Answer: "<<pbj.retNo();
+                if(ans1 == pbj.retNo()){
                     check = 1;
+                    }
                 break;
 
             case 6:
                 cin>>ans3;
-                if(ans3 == pbj.retmp())
+                cout<<"Correct Answer: "<<  pbj.retmp();
+                if(ans3 == pbj.retmp()){
+
                     check = 1;
+                }
                 break;
 
             case 8:
                 cin>>ans1;
-                if(ans1 == pbj.retYear())
+                cout<<"Correct Answer: "<< pbj.retYear();
+                if(ans1 == pbj.retYear()){
                     check = 1;
+                    }
                 break;
 
             }
@@ -292,6 +344,7 @@ void deleteElement(){
 
 //Search Functions
 void searchChoice(){
+   elements obj;
     loop:
     system("cls");
     cout<<"1. Search by Element Symbol\n2. Search by Element Name\n3. Search by Date Range\n4. Search by Year Discovered\n5. Search by Block\n0. Return to Menu\nYour Choice: ";
@@ -299,7 +352,6 @@ void searchChoice(){
     cin>>ans;
     ifstream fout("elements.txt", ios::in|ios::binary);
     ifstream fin("elements.txt", ios::in|ios::binary);
-    elements obj;
     elements viable;
     int mind = 100000;
     switch(ans){
@@ -307,7 +359,9 @@ void searchChoice(){
                 return;
         case 1:
                 cout<<"Enter the Symbol: ";
+
                 char sym[4]; cin>>sym;
+                enq(sym);
                 while(fout.read((char*)&obj,sizeof(obj))){
                     if(strcmp(sym, obj.retSymbol())==0){
                         obj.display();
@@ -315,12 +369,14 @@ void searchChoice(){
                     }
                 }
                 fout.close();
+
                 break;
 
 
         case 2:
                 cout<<"Enter the Name of the Element: ";
                 char ele[40]; cin>>ele;
+                enq(ele);
                 while(fout.read((char*)&obj, sizeof(obj))){
                     if(edit_dist(ele, obj.retName()) < mind){
                         viable = obj;
@@ -330,7 +386,7 @@ void searchChoice(){
                 viable.display();
                 fout.close();
                 break;
-               /* cout<<"Enter the Name of the Element: ";
+                /*cout<<"Enter the Name of the Element: ";
                 char ele[40];
                 cin>>ele;
                 while(fout.read((char*)&obj,sizeof(obj))){
@@ -367,6 +423,9 @@ void searchChoice(){
 
 
         case 5:
+
+
+
                 char block;
                 cout<<"Enter the Block: ";cin>>block;
                 while(fin.read((char*)&obj, sizeof(obj))){
@@ -374,12 +433,10 @@ void searchChoice(){
                         cout<<obj.retName()<<endl;
                 }
                 fin.close();break;
-
     }
     system("pause");
     goto loop;
 }
-
 
 //graph function
 
@@ -496,24 +553,35 @@ int main(){
     loop:
     system("cls");
     pTable();
-    cout<<"1. Enter an Element\n2. Delete an Element\n3. Search for an element\n4. Take a Quiz\n5. Plot Temperatures\n6. Direct Search\nYour Choice: ";
-    int choice;
+    cout<<"1. Modify Element Data\n2. Search for an element\n3. Quick Question\n4. Plot Temperatures\n5. Direct Search\n6. Recent Searchs\nYour Choice: ";
+    int choice,c1;
     cin>>choice;
     switch(choice){
         case 0: exit(0);
-        case 1: obj.enter(); obj.store(obj);break;
-        case 2: deleteElement();break;
-        case 3: {
+        case 1: cout<<"1. Enter an Element\n2. Delete an Element\n3. Return to Menu";
+                cin>>c1;
+                if(c1==1){
+                    obj.enter();
+                    obj.store(obj);
+                    break;
+                }
+                else if(c1==2){
+                    deleteElement();
+                    break;
+                }
+                else
+                    break;
+        case 2: {
             searchChoice();
             break;
         }
-        case 4: pbj.getQuestion();break;
-        case 5: {
+        case 3: pbj.getQuestion();break;
+        case 4: {
                 /*int prop;
                 cout<<"Select Properties to compare:\n"<<"1. Melting Point\n2. Boiling Point\n3. Melting point and Boiling point\n";
                 cin>>prop;*/
                 int selector;
-                cout<<"Select Elements\n1. By Period\n2. By Group\n";
+                cout<<"\n1. View by Period\n2. View by Group\n";
                 cin>>selector;
                 if(selector==1){
                     int p;
@@ -529,12 +597,20 @@ int main(){
                 }
                 goto loop;
                 }
-        case 6:{
+        case 5:{
                 cout<<"Enter the search request in the following format:\n(element symbol):(property)";
                 cout<<"\nThe properties include: atno, atweight, mp, bp, yod, gpb(group, period, block)\n";
                 char input[10];
                 cin>>input;
                 parseInput(input);break;
+        }
+
+        case 6:{
+                while(size>5){
+                    deq();
+                    size--;
+                }
+                display();
         }
 
     }
