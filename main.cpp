@@ -344,7 +344,8 @@ void deleteElement(){
 
 //Search Functions
 void searchChoice(){
-   elements obj;
+    elements obj;
+    elements viable;
     loop:
     system("cls");
     cout<<"1. Search by Element Symbol\n2. Search by Element Name\n3. Search by Date Range\n4. Search by Year Discovered\n5. Search by Block\n0. Return to Menu\nYour Choice: ";
@@ -352,7 +353,7 @@ void searchChoice(){
     cin>>ans;
     ifstream fout("elements.txt", ios::in|ios::binary);
     ifstream fin("elements.txt", ios::in|ios::binary);
-    elements viable;
+
     int mind = 100000;
     switch(ans){
         case 0:
@@ -480,7 +481,7 @@ fin.close();
             setColor(x,y,RED);
             x<<w;
             y<<z;
-            plot(x,y,BLUE,"Plot of Melting point and Boiling Point(reduced by a factor of 10");
+            plot(x,y,BLUE,"Plot of Melting point and Boiling Point(reduced by a factor of 10)");
 
 
 }
@@ -528,7 +529,37 @@ fin.close();
 
 
 }
+void pMass(int p){
+    elements obj;
+    double amass[20],a[20];
+    int k = 0,n;
 
+    ifstream fin("elements.txt", ios::in | ios::binary);
+    while(fin.read((char*)&obj, sizeof(obj))){
+      if(p==obj.retPeriod()){
+          cout<<obj.retName()<<"\n";
+          a[k] = obj.retNo();
+          cout<<"Atomic Number: "<< a[k]<<"\n";
+          amass[k]=obj.retw();
+          cout<<"Atomic Weight: "<<amass[k]<<"\n\n";
+          k++;
+      }
+      else{
+      }
+    }
+    n=k;
+fin.close();
+
+            plotdata x,y;
+            insert(x,a,n);
+            insert(y, amass, n);//kill me
+            for(int i=0;i<n;i++){
+                addMark(x, y,a[i],amass[i]);
+            }
+            plot(x,y,BLUE,"Plot of Atomic Weights");
+
+
+}
 //View the table
 void pTable(){
     cout<<"\n\t\t\t\t\t\tTHE MODERN PERIODIC TABLE\n";
@@ -553,7 +584,7 @@ int main(){
     loop:
     system("cls");
     pTable();
-    cout<<"1. Modify Element Data\n2. Search for an element\n3. Quick Question\n4. Plot Temperatures\n5. Direct Search\n6. Recent Searchs\nYour Choice: ";
+    cout<<"1. Modify Element Data\n2. Search for an element\n3. Quick Question\n4. Plot Temperatures\n5. Search History\n6. Recent Searchs\nYour Choice: ";
     int choice,c1;
     cin>>choice;
     switch(choice){
