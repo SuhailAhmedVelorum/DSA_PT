@@ -71,11 +71,8 @@ class elements{
     int retGroup(){
     return group;}
 
-    float retw(){
+    float retMass(){
     return atomicWeight;}
-
-    void gpb(){
-    cout<<"Group: "<<group<<"\nPeriod: "<<period<<"\nBlock: "<<block<<endl;}
 
     void display(){
 
@@ -107,50 +104,6 @@ class elements{
         fin.close();
     }
 };
-
-
-//store recent
-int size=0;
-struct node{
-    char sym[20];
-    node *next;
-}*q, *r;
-
-void init(){
-q = r = NULL;
-}
-
-void enq(char a[4]){
-    node *ptr = new node;
-    strcpy(ptr->sym, a);
-    ptr->next = NULL;
-    if(q == NULL){
-        q = r = ptr;
-    }
-    else{
-        r->next = ptr;
-        r = ptr;
-    }
-}
-
-void deq(){
-    node *ptr = q;
-    if(q == r){
-        q = r = NULL;
-    }
-    else{
-        q = q->next;
-        delete(ptr);
-    }
-}
-
-void display(){
-    node *ptr = q;
-    while(ptr!=NULL){
-        cout<<"Element: "<<ptr->sym<<endl;
-        ptr = ptr->next;
-    }
-}
 
 //Questions class
 class questions
@@ -193,7 +146,7 @@ class questions
                 count++;
             }
         fin.close();
-        int element = rand()%80 + 1;
+        int element = rand()%10 + 1;
         ifstream fin2("elements.txt", ios::in|ios::binary);
             while(fin2.read((char*)&pbj,sizeof(pbj))){
                 if(pbj.retNo() == element)
@@ -201,7 +154,6 @@ class questions
             }
         cout<<obj.retq()<<" "<<pbj.retName()<<endl;
         fin2.close();
-
         cout<<"Your answer: ";
         int ans1,check = 0;
         char ans2[20];
@@ -209,27 +161,20 @@ class questions
         switch(obj.retAns()){
             case 1:
                 cin>>ans1;
-                cout<<"Correct Answer: "<<pbj.retNo();
-                if(ans1 == pbj.retNo()){
+                if(ans1 == pbj.retNo())
                     check = 1;
-                    }
                 break;
 
             case 6:
                 cin>>ans3;
-                cout<<"Correct Answer: "<<  pbj.retmp();
-                if(ans3 == pbj.retmp()){
-
+                if(ans3 == pbj.retmp())
                     check = 1;
-                }
                 break;
 
             case 8:
                 cin>>ans1;
-                cout<<"Correct Answer: "<< pbj.retYear();
-                if(ans1 == pbj.retYear()){
+                if(ans1 == pbj.retYear())
                     check = 1;
-                    }
                 break;
 
             }
@@ -243,50 +188,6 @@ class questions
 
 };
 //End of Questions Class
-
-void parseInput(char input[10]){
-    elements obj;
-    char symbol[4], property[10];
-    int i = 0,j=0,k=0;
-    while(input[i]!= ':'){
-        symbol[j] = input[i];
-        i++;j++;
-    }
-    symbol[j] = '\0';
-    i++;
-    while(i<strlen(input)){
-        property[k] = input[i];
-        i++;k++;
-    }
-
-    property[k] = '\0';
-    ifstream fin("elements.txt", ios::in | ios::binary);
-    while(fin.read((char*)&obj,sizeof(obj))){
-        if(strcmp(obj.retSymbol(), symbol)==0)
-            break;
-    }
-    cout<<endl;
-    if(strcmp("atno", property)==0){
-        cout<<"Element: "<<obj.retName()<<endl<<"Atomic Number: "<<obj.retNo();
-    }
-    else if(strcmp("atweight", property)==0){
-         cout<<"Element: "<<obj.retName()<<endl<<"Atomic Weight: "<<obj.retw();
-    }
-    else if(strcmp("mp", property)==0){
-         cout<<"Element: "<<obj.retName()<<endl<<"Melting Point: "<<obj.retmp();
-    }
-    else if(strcmp("bp", property)==0){
-         cout<<"Element: "<<obj.retName()<<endl<<"Boiling Point: "<<obj.retbp();
-    }
-    else if(strcmp("yod", property)==0){
-         cout<<"Element: "<<obj.retName()<<endl<<"Year of Discovery: "<<obj.retYear();
-    }
-    else if(strcmp("gpb", property)==0){
-         cout<<"Element: "<<obj.retName()<<endl;
-         obj.gpb();
-    }
-
-}
 
 //Computes the Lavenshtiens distance between the two input words
 int edit_dist(char* s1, char* s2){
@@ -323,7 +224,7 @@ int edit_dist(char* s1, char* s2){
 
 //Delete Function
 void deleteElement(){
-    cout<<"\nEnter the symbol of the Element you want to delete: ";
+    cout<<"\nEnter the symbol of the Element you wan to delete: ";
     char sym[4];
     cin>>sym;
     elements obj;
@@ -343,41 +244,28 @@ void deleteElement(){
 
 
 //Search Functions
-void searchChoice(){
-    elements obj;
-    elements viable;
-    loop:
-    system("cls");
-    cout<<"1. Search by Element Symbol\n2. Search by Element Name\n3. Search by Date Range\n4. Search by Year Discovered\n5. Search by Block\n0. Return to Menu\nYour Choice: ";
-    int ans;
-    cin>>ans;
+void searchChoice(int ans){
     ifstream fout("elements.txt", ios::in|ios::binary);
     ifstream fin("elements.txt", ios::in|ios::binary);
-
+    elements obj;
+    elements viable;
     int mind = 100000;
     switch(ans){
-        case 0:
-                return;
         case 1:
                 cout<<"Enter the Symbol: ";
-
                 char sym[4]; cin>>sym;
-                enq(sym);
                 while(fout.read((char*)&obj,sizeof(obj))){
                     if(strcmp(sym, obj.retSymbol())==0){
                         obj.display();
                         break;
                     }
                 }
-                fout.close();
-
-                break;
+                fout.close();break;
 
 
         case 2:
                 cout<<"Enter the Name of the Element: ";
                 char ele[40]; cin>>ele;
-                enq(ele);
                 while(fout.read((char*)&obj, sizeof(obj))){
                     if(edit_dist(ele, obj.retName()) < mind){
                         viable = obj;
@@ -386,8 +274,7 @@ void searchChoice(){
                 }
                 viable.display();
                 fout.close();
-                break;
-                /*cout<<"Enter the Name of the Element: ";
+               /* cout<<"Enter the Name of the Element: ";
                 char ele[40];
                 cin>>ele;
                 while(fout.read((char*)&obj,sizeof(obj))){
@@ -410,8 +297,6 @@ void searchChoice(){
                 }
                 fin.close();break;
 
-
-
         case 4:
                 int d3; cout<<"Enter the Year: ";cin>>d3;
                 while(fin.read((char*)&obj,sizeof(obj))){
@@ -424,9 +309,6 @@ void searchChoice(){
 
 
         case 5:
-
-
-
                 char block;
                 cout<<"Enter the Block: ";cin>>block;
                 while(fin.read((char*)&obj, sizeof(obj))){
@@ -434,9 +316,8 @@ void searchChoice(){
                         cout<<obj.retName()<<endl;
                 }
                 fin.close();break;
+
     }
-    system("pause");
-    goto loop;
 }
 
 //graph function
@@ -481,7 +362,7 @@ fin.close();
             setColor(x,y,RED);
             x<<w;
             y<<z;
-            plot(x,y,BLUE,"Plot of Melting point and Boiling Point(reduced by a factor of 10)");
+            plot(x,y,BLUE,"Plot of Melting point and Boiling Point(reduced by a factor of 10");
 
 
 }
@@ -529,53 +410,6 @@ fin.close();
 
 
 }
-void pMass(int p){
-    elements obj;
-    double amass[20],a[20];
-    int k = 0,n;
-
-    ifstream fin("elements.txt", ios::in | ios::binary);
-    while(fin.read((char*)&obj, sizeof(obj))){
-      if(p==obj.retPeriod()){
-          cout<<obj.retName()<<"\n";
-          a[k] = obj.retNo();
-          cout<<"Atomic Number: "<< a[k]<<"\n";
-          amass[k]=obj.retw();
-          cout<<"Atomic Weight: "<<amass[k]<<"\n\n";
-          k++;
-      }
-      else{
-      }
-    }
-    n=k;
-fin.close();
-
-            plotdata x,y;
-            insert(x,a,n);
-            insert(y, amass, n);//kill me
-            for(int i=0;i<n;i++){
-                addMark(x, y,a[i],amass[i]);
-            }
-            plot(x,y,BLUE,"Plot of Atomic Weights");
-
-
-}
-//View the table
-void pTable(){
-    cout<<"\n\t\t\t\t\t\tTHE MODERN PERIODIC TABLE\n";
-    cout<<"\t\t\t\t\t\t-------------------------\n";
-    cout<<"\t\t\t\t1 H                                                      He"<<"\n\n";
-    cout<<"\t\t\t\t2 Li Be                                 B  C   N  O   F  Ne"<<"\n\n";
-    cout<<"\t\t\t\t3 Na Mg                                 Al Si  P  S   Cl Ar"<<"\n\n";
-    cout<<"\t\t\t\t4 K  Ca Sc Ti V  Cr Mn Fe Co Ni Cu  Zn  Ga Ge  As Se  Br Kr"<<"\n\n";
-    cout<<"\t\t\t\t5 Rb Sr Y  Zr Nb Mo Tc Ru Rh Pd Ag  Cd  In Sn  Sb Te  I  Xe"<<"\n\n";
-    cout<<"\t\t\t\t6 Cs Ba La Hf Ta W  Re Os Ir Pt Au  Hg  Tl Pb  Bi Po  At Rn"<<"\n\n";
-    cout<<"\t\t\t\t7 Fr Ra Ac Rf Db Sg Bh Hs Mt Ds Rg  Cn  Nh Fl  Mc Lv  Ts Og"<<"\n\n";
-    cout<<"\t\t\t\t  1  2  3  4  5  6  7  8  9  10 11  12  13 14  15 16  17 18\n\n\n";
-    cout<<"\t\t\t\tLanthanoids\t Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu"<<"\n\n";
-    cout<<"\t\t\t\tActinoids\t Th Pa U  Np Pu Am Cm Bk Cf Es Fm Md No Lr"<<"\n\n";
-}
-
 
 int main(){
 
@@ -583,36 +417,40 @@ int main(){
     questions pbj;
     loop:
     system("cls");
-    pTable();
-    cout<<"1. Modify Element Data\n2. Search for an element\n3. Quick Question\n4. Plot Temperatures\n5. Search History\n6. Recent Searchs\nYour Choice: ";
-    int choice,c1;
+        cout<<"\n\t\t\tTHE MODERN PERIODIC TABLE\n";
+    cout<<"\t\t\t-------------------------\n";
+
+    cout<<"\t1 H                                                      He"<<"\n\n";
+    cout<<"\t2 Li Be                                 B  C   N  O   F  Ne"<<"\n\n";
+    cout<<"\t3 Na Mg                                 Al Si  P  S   Cl Ar"<<"\n\n";
+    cout<<"\t4 K  Ca Sc Ti V  Cr Mn Fe Co Ni Cu  Zn  Ga Ge  As Se  Br Kr"<<"\n\n";
+    cout<<"\t5 Rb Sr Y  Zr Nb Mo Tc Ru Rh Pd Ag  Cd  In Sn  Sb Te  I  Xe"<<"\n\n";
+    cout<<"\t6 Cs Ba La Hf Ta W  Re Os Ir Pt Au  Hg  Tl Pb  Bi Po  At Rn"<<"\n\n";
+    cout<<"\t7 Fr Ra Ac Rf Db Sg Bh Hs Mt Ds Rg  Cn  Nh Fl  Mc Lv  Ts Og"<<"\n\n";
+    cout<<"\t  1  2  3  4  5  6  7  8  9  10 11  12  13 14  15 16  17 18\n\n\n";
+    cout<<"\tLanthanoids\t Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu"<<"\n\n";
+    cout<<"\tActinoids\t Th Pa U  Np Pu Am Cm Bk Cf Es Fm Md No Lr"<<"\n\n\n";
+    cout<<"1. Enter an Element\n2. Delete an Element\n3. Search for an element\n4. Take a Quiz\n5. Plot Temperatures\nYour Choice: ";
+    int choice;
     cin>>choice;
     switch(choice){
         case 0: exit(0);
-        case 1: cout<<"1. Enter an Element\n2. Delete an Element\n3. Return to Menu";
-                cin>>c1;
-                if(c1==1){
-                    obj.enter();
-                    obj.store(obj);
-                    break;
-                }
-                else if(c1==2){
-                    deleteElement();
-                    break;
-                }
-                else
-                    break;
-        case 2: {
-            searchChoice();
+        case 1: obj.enter(); obj.store(obj);break;
+        case 2: deleteElement();break;
+        case 3: {
+            cout<<"1. Search by Element Symbol\n2. Search by Element Name\n3. Search by Date Range\n4. Search by Year Discovered\n5. Search by Block\nYour Choice: ";
+            int ans;
+            cin>>ans;
+            searchChoice(ans);
             break;
         }
-        case 3: pbj.getQuestion();break;
-        case 4: {
+        case 4: pbj.getQuestion();break;
+        case 5: {
                 /*int prop;
                 cout<<"Select Properties to compare:\n"<<"1. Melting Point\n2. Boiling Point\n3. Melting point and Boiling point\n";
                 cin>>prop;*/
                 int selector;
-                cout<<"\n1. View by Period\n2. View by Group\n";
+                cout<<"Select Elements\n1. By Period\n2. By Group\n";
                 cin>>selector;
                 if(selector==1){
                     int p;
@@ -628,21 +466,6 @@ int main(){
                 }
                 goto loop;
                 }
-        case 5:{
-                cout<<"Enter the search request in the following format:\n(element symbol):(property)";
-                cout<<"\nThe properties include: atno, atweight, mp, bp, yod, gpb(group, period, block)\n";
-                char input[10];
-                cin>>input;
-                parseInput(input);break;
-        }
-
-        case 6:{
-                while(size>5){
-                    deq();
-                    size--;
-                }
-                display();
-        }
 
     }
     cout<<endl;
